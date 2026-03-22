@@ -2,20 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+
+  // ─── Design Tokens ───────────────────────────────────────────────
+
+  /* Backgrounds */
+  --bg-dark:  #101114;  /* base page background */
+  --bg-light: #1B1D22;  /* alternate section background */
+
+  /* Primary gradient (orange, horizontal) */
+  --gradient-primary: linear-gradient(
+    to right,
+    #F23207 0%,
+    #F25C05 50%,
+    #F28705 100%
+  );
+
+  /* Card fill gradient (diagonal) */
+  --gradient-card: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    #18181B 100%
+  );
+
+  /* Card stroke  */
+  --card-stroke: rgba(255, 255, 255, 0.20);
+
+  /* Typography */
+  --font-display: 'Montserrat', sans-serif;  /* headlines */
+  --font-body:    'Inter', sans-serif;        /* body text */
+
+  /* Orange glow — used on icon boxes and card hover */
+  --glow-primary: 0 0 28px rgba(242, 92, 5, 0.40);
+}
+
+// ─── BASE STYLES ───────────────────────────────────────────────
+
 @layer base {
-  html {
-    scroll-behavior: smooth;
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
+
+  html { 
+    scroll-behavior: smooth;
+    /* Controls how the browser renders the borders of letters on the screen: */
+    -webkit-font-smoothing: antialiased; /*Chrome/Safari*/
+    -moz-osx-font-smoothing: grayscale; /*Firefox*/
+  }
+
+  /* Base background is the darkest tone.
+     Sections alternate between bg-dark and bg-light individually. */
   body {
-    @apply bg-dark-900 text-white font-sans antialiased;
+    background-color: var(--bg-dark);
+    @apply text-white font-body;
+    overflow-x: hidden;
+  }
+
+  /* Text selection highlight */
+  ::selection {
+    background-color: #F25C05;
+    color: #ffffff;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar       { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-dark); }
+  ::-webkit-scrollbar-thumb {
+    background: #F25C05;
+    border-radius: 4px;
+  }
+
+  /* All headings default to Montserrat */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
   }
 }
 
-@layer utilities {
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-brand-600;
+// ── COMPONENTS ──────────────────────────────────────────────────────────
+
+@layer components {
+
+  /* ── Layout ── */
+  .section-container {
+    @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  .border-gradient {
-    border-image: linear-gradient(to right, #e6ac35, #b97218) 1;
+
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  // ── Typography ────────────────────────────────────────────────────── 
+
+  /* Inline orange gradient text — used for highlighted words in headings */
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  /* Small label above section titles */
+  .section-tag {
+    @apply text-xs font-body font-semibold tracking-[0.18em] uppercase;
+    color: #F25C05;
+  }
+
+  // ── Buttons ──────────────────────────────────────────────────────── 
+
+  /* Primary — orange gradient fill, pill shape */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           font-display font-bold rounded-btn
+           px-6 py-3 text-white text-sm
+           cursor-pointer select-none
+           transition-all duration-300
+           hover:brightness-110 hover:shadow-glow-primary
+           active:scale-95;
+    background-image: var(--gradient-primary);
+  }
+
+  /* Outline — subtle border, pill shape, no fill */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           font-display font-bold rounded-btn
+           px-6 py-3 text-white text-sm
+           cursor-pointer select-none
+           border bg-transparent
+           transition-all duration-300
+           active:scale-95;
+    border-color: var(--card-stroke);
+  }
+
+  .btn-outline:hover {
+    border-color: #F25C05;
+    color: #F25C05;
+  }
+
+  // ── Cards ────────────────────────────────────────────────────────── 
+
+  /* Base card */
+  .card {
+    @apply rounded-card p-5 shadow-card;
+    background: var(--gradient-card);
+    border: 1px solid var(--card-stroke);
+  }
+
+  /* Card with hover lift and subtle glow */
+  .card-hover {
+    @apply card transition-all duration-300
+           hover:-translate-y-1 hover:shadow-glow-primary-sm;
+  }
+
+  /* ── Icons ── */
+
+  /* Icon container with orange glow — used in service cards */
+  .icon-box {
+    @apply w-12 h-12 rounded-icon
+           flex items-center justify-center;
+    background-color: rgba(242, 92, 5, 0.10);
+    box-shadow: var(--glow-primary);
+  }
+
+}
+
+// ─── UTILITIES ──────────────────────────────────────────────
+
+@layer utilities {
+  /* Hide scrollbar while keeping scroll functionality */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Apply orange glow shadow directly as a utility */
+  .glow-primary {
+    box-shadow: var(--glow-primary);
+  }
+
+  /* Apply primary gradient as background */
+  .bg-gradient-primary {
+    background-image: var(--gradient-primary);
+  }
+
+  /* Apply card gradient as background */
+  .bg-gradient-card {
+    background: var(--gradient-card);
   }
 }
